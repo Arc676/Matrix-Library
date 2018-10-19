@@ -16,6 +16,7 @@
 #define INVERSE_H
 
 #include "matrix.h"
+#include "arithmetic.h"
 
 /**
  * Determine the matrix of minors for a given matrix
@@ -27,10 +28,9 @@ void matrix_minors(Matrix* dst, Matrix* matrix);
 /**
  * Determine the matrix of cofactors for a given matrix
  * @param dst Destination matrix in which to store the matrix of cofactors (can be the operand)
- * @param matrix Matrix whose matrix of cofactors to find
- * @param minors Matrix of minors for the given matrix. If NULL, this will be calculated.
+ * @param minors Matrix of minors for the given matrix
  */
-void matrix_cofactors(Matrix* dst, Matrix* matrix, Matrix* minors);
+void matrix_cofactors(Matrix* dst, Matrix* minors);
 
 /**
  * Determine the determinant of a matrix
@@ -43,9 +43,9 @@ double matrix_determinant(Matrix* matrix, Matrix* cofactors);
 /**
  * Determine the inverse of a matrix
  * @param dst Destination matrix in which to store the inverse matrix (can be the operand)
- * @param matrix Matrix whose inverse to find
- * @param minors Matrix of minors for the given matrix. If NULL, this will be calculated.
- * @param cofactors Matrix of cofactors for the given matrix. If NULL, this will be calculated.
+ * @param matrix Matrix whose inverse to find. If the matrix isn't squared, the arguments are left unchanged and 0 is returned
+ * @param minors Destination matrix in which to store the matrix of minors (optional)
+ * @param cofactors Destination matrix in which to store the matrix of cofactors (optional)
  * @return The determinant of the matrix
  */
 double matrix_invert(Matrix* dst, Matrix* matrix, Matrix* minors, Matrix* cofactors);

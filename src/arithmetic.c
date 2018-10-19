@@ -28,7 +28,7 @@ void matrix_add(Matrix* dst, Matrix* m1, Matrix* m2) {
 void matrix_multiplyScalar(Matrix* dst, Matrix* matrix, double scale) {
 	for (int r = 0; r < matrix->rows; r++) {
 		for (int c = 0; c < matrix->cols; c++) {
-			matrix->matrix[r][c] *= scale;
+			dst->matrix[r][c] = matrix->matrix[r][c] * scale;
 		}
 	}
 }

@@ -18,9 +18,9 @@ Matrix* matrix_createMatrix(int rows, int cols) {
 	Matrix* matrix = malloc(sizeof(Matrix));
 	matrix->rows = rows;
 	matrix->cols = cols;
-	matrix->matrix = malloc(rows * sizeof(int*));
+	matrix->matrix = malloc(rows * sizeof(double*));
 	for (int r = 0; r < rows; r++) {
-		matrix->matrix[r] = malloc(cols * sizeof(int));
+		matrix->matrix[r] = malloc(cols * sizeof(double));
 	}
 	return matrix;
 }
@@ -62,7 +62,7 @@ Matrix* matrix_createMatrixWithElements(int rows, int cols, ...) {
 Matrix* matrix_copyMatrix(Matrix* matrix) {
 	Matrix* copy = matrix_createMatrix(matrix->rows, matrix->cols);
 	for (int r = 0; r < matrix->rows; r++) {
-		memcpy(copy->matrix[r], matrix->matrix[r], matrix->cols * sizeof(int));
+		memcpy(copy->matrix[r], matrix->matrix[r], matrix->cols * sizeof(double));
 	}
 	return copy;
 }
@@ -90,8 +90,10 @@ void matrix_transpose(Matrix* dst, Matrix* matrix) {
 }
 
 void matrix_zeroMatrix(Matrix* matrix) {
-	for (int i = 0; i < matrix->rows; i++) {
-		memset(matrix->matrix[i], 0, matrix->cols * sizeof(int));
+	for (int r = 0; r < matrix->rows; r++) {
+		for (int c = 0; c < matrix->cols; c++) {
+			matrix->matrix[r][c] = 0;
+		}
 	}
 }
 

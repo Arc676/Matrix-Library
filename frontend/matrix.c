@@ -52,7 +52,14 @@ int main(int argc, char* argv[]) {
 			printMatrix(m1);
 			matrix_destroyMatrix(m1);
 			matrix_destroyMatrix(m2);
-		} else if (!strcmp(cmd, "exit")) {
+		} else if (!strcmp(cmd, "inverse")) {
+			Matrix* m = inputMatrix();
+			double det = matrix_invert(m, m, NULL, NULL);
+			printMatrix(m);
+			printf("Determinant: %lf\n", det);
+			matrix_destroyMatrix(m);
+		}
+		else if (!strcmp(cmd, "exit")) {
 			break;
 		} else {
 			printf("Invalid command\n");
