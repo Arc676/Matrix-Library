@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stdarg.h>
+#include <string.h>
 
 typedef struct Matrix {
 	int rows;
@@ -63,6 +64,12 @@ Matrix* matrix_createMatrixWithElements(int rows, int cols, ...);
  * @return A newly constructed matrix with the same entries
  */
 Matrix* matrix_copyMatrix(Matrix* matrix);
+
+/**
+ * Deallocates the memory for a matrix
+ * @param matrix Matrix to destroy
+ */
+void matrix_destroyMatrix(Matrix* matrix);
 
 /**
  * Transposes a matrix. If the destination matrix and the given matrix

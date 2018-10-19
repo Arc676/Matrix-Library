@@ -67,6 +67,14 @@ Matrix* matrix_copyMatrix(Matrix* matrix) {
 	return copy;
 }
 
+void matrix_destroyMatrix(Matrix* matrix) {
+	for (int r = 0; r < matrix->rows; r++) {
+		free(matrix->matrix[r]);
+	}
+	free(matrix->matrix);
+	free(matrix);
+}
+
 void matrix_transpose(Matrix* dst, Matrix* matrix) {
 	if (dst->rows != matrix->rows || dst->cols != matrix->cols) {
 		return;
