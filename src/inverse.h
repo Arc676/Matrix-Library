@@ -15,6 +15,8 @@
 #ifndef INVERSE_H
 #define INVERSE_H
 
+#include "matrix.h"
+
 /**
  * Determine the matrix of minors for a given matrix
  * @param dst Destination matrix in which to store the matrix of minors (cannot be the operand)

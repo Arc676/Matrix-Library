@@ -25,9 +25,9 @@ lib: makeodir $(_OBJS)
 	ar rcs $(LIBOUT) $(_OBJS)
 
 makeodir:
-	mkdir $(ODIR)
+	mkdir -p $(ODIR)
 
-$(ODIR)/%.o: $(SDIR)/%.cpp
+$(ODIR)/%.o: $(SDIR)/%.c
 	$(CC) -c $(FLAGS) -o $@ $<
 
 clean:

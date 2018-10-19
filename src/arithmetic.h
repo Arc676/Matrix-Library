@@ -15,6 +15,8 @@
 #ifndef ARITHMETIC_H
 #define ARITHMETIC_H
 
+#include "matrix.h"
+
 /**
  * Adds two matrices. If the matrices are not of equal size,
  * the arguments are left unchanged.

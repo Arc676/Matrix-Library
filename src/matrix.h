@@ -15,11 +15,23 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
+#include <stdlib.h>
+#include <math.h>
+#include <stdarg.h>
+
 typedef struct Matrix {
 	int rows;
 	int cols;
 	double** matrix;
 } Matrix;
+
+/**
+ * Creates and returns a pointer to an uninitialized matrix
+ * @param rows Desired number of rows in the matrix
+ * @param cols Desired number of columns in the matrix
+ * @return Pointer to the newly constructed matrix
+ */
+Matrix* matrix_createMatrix(int rows, int cols);
 
 /**
  * Creates and returns a pointer to a new zero matrix
@@ -53,7 +65,8 @@ Matrix* matrix_createMatrixWithElements(int rows, int cols, ...);
 Matrix* matrix_copyMatrix(Matrix* matrix);
 
 /**
- * Transposes a matrix
+ * Transposes a matrix. If the destination matrix and the given matrix
+ * are of unequal dimensions, the arguments are left unchanged.
  * @param dst Destination matrix (can be the original matrix)
  * @param matrix Matrix to transpose
  */
