@@ -1,4 +1,4 @@
-//Copyright (C) 2018  Arc676/Alessandro Vinciguerra <alesvinciguerra@gmail.com>
+//Copyright (C) 2018-9 Arc676/Alessandro Vinciguerra <alesvinciguerra@gmail.com>
 
 //This program is free software: you can redistribute it and/or modify
 //it under the terms of the GNU General Public License as published by
@@ -10,7 +10,7 @@
 //GNU General Public License for more details.
 
 //You should have received a copy of the GNU General Public License
-//along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 #include <stdio.h>
 #include "libmatrix.h"
@@ -54,10 +54,27 @@ int main(int argc, char* argv[]) {
 			matrix_destroyMatrix(m2);
 		} else if (!strcmp(cmd, "inverse")) {
 			Matrix* m = inputMatrix();
-			double det = matrix_invert(m, m, NULL, NULL);
+			Matrix *min = matrix_createMatrix(m->rows, m->cols), *cof = matrix_createMatrix(m->rows, m->cols);
+			double det = matrix_invert(m, m, min, cof);
+			printf("Minors:\n");
+			printMatrix(min);
+			printf("Cofactors:\n");
+			printMatrix(cof);
+			printf("Inverse:\n");
 			printMatrix(m);
 			printf("Determinant: %lf\n", det);
 			matrix_destroyMatrix(m);
+			matrix_destroyMatrix(min);
+			matrix_destroyMatrix(cof);
+		} else if (!strcmp(cmd, "multiply")) {
+			Matrix* m1 = inputMatrix();
+			Matrix* m2 = inputMatrix();
+			Matrix* md = matrix_createMatrix(m1->rows, m2->cols);
+			matrix_multiplyMatrix(md, m1, m2);
+			printMatrix(md);
+			matrix_destroyMatrix(m1);
+			matrix_destroyMatrix(m2);
+			matrix_destroyMatrix(md);
 		}
 		else if (!strcmp(cmd, "exit")) {
 			break;
