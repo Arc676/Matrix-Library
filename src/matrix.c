@@ -61,10 +61,17 @@ Matrix* matrix_createMatrixWithElements(int rows, int cols, ...) {
 
 Matrix* matrix_copyMatrix(Matrix* matrix) {
 	Matrix* copy = matrix_createMatrix(matrix->rows, matrix->cols);
-	for (int r = 0; r < matrix->rows; r++) {
-		memcpy(copy->matrix[r], matrix->matrix[r], matrix->cols * sizeof(double));
-	}
+	matrix_copyEntries(copy, matrix);
 	return copy;
+}
+
+void matrix_copyEntries(Matrix* dst, Matrix* src) {
+	if (dst->rows != src->rows || dst->cols != src->cols) {
+		return;
+	}
+	for (int r = 0; r < src->rows; r++) {
+		memcpy(dst->matrix[r], src->matrix[r], src->cols * sizeof(double));
+	}
 }
 
 void matrix_destroyMatrix(Matrix* matrix) {

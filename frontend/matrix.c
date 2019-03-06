@@ -75,6 +75,42 @@ int main(int argc, char* argv[]) {
 			matrix_destroyMatrix(m1);
 			matrix_destroyMatrix(m2);
 			matrix_destroyMatrix(md);
+		} else if (!strcmp(cmd, "power")) {
+			Matrix* m1 = inputMatrix();
+			int power;
+			printf("Power: ");
+			scanf("%d", &power);
+			getc(stdin);
+			if (power < 2) {
+				printf("Doing nothing\n");
+				matrix_destroyMatrix(m1);
+				continue;
+			}
+			Matrix* m2 = matrix_copyMatrix(m1);
+			Matrix* mp = matrix_copyMatrix(m1);
+			for (int i = 2; i <= power; i++) {
+				matrix_multiplyMatrix(mp, m1, m2);
+				matrix_copyEntries(m1, mp);
+			}
+			printMatrix(mp);
+			matrix_destroyMatrix(m1);
+			matrix_destroyMatrix(m2);
+			matrix_destroyMatrix(mp);
+		} else if (!strcmp(cmd, "similar")) {
+			printf("Enter U: ");
+			Matrix* U = inputMatrix();
+			printf("Enter A: ");
+			Matrix* A = inputMatrix();
+			Matrix* res = matrix_createMatrix(A->rows, A->cols);
+			matrix_multiplyMatrix(res, U, A);
+			matrix_invert(U, U, NULL, NULL);
+			matrix_copyEntries(A, res);
+			matrix_multiplyMatrix(res, A, U);
+			printf("UAU^-1:\n");
+			printMatrix(res);
+			matrix_destroyMatrix(U);
+			matrix_destroyMatrix(A);
+			matrix_destroyMatrix(res);
 		}
 		else if (!strcmp(cmd, "exit")) {
 			break;

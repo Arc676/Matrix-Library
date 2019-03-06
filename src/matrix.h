@@ -66,6 +66,14 @@ Matrix* matrix_createMatrixWithElements(int rows, int cols, ...);
 Matrix* matrix_copyMatrix(Matrix* matrix);
 
 /**
+ * Copies the entries of a matrix into another one; if they are of unequal sizes,
+ * this method does nothing
+ * @param dst The destination matrix
+ * @param src The source matrix
+ */
+void matrix_copyEntries(Matrix* dst, Matrix* src);
+
+/**
  * Deallocates the memory for a matrix
  * @param matrix Matrix to destroy
  */
