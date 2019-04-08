@@ -80,9 +80,9 @@ void matrix_copyEntries(Matrix* dst, Matrix* src);
 void matrix_destroyMatrix(Matrix* matrix);
 
 /**
- * Transposes a matrix. If the destination matrix and the given matrix
- * are of unequal dimensions, the arguments are left unchanged.
- * @param dst Destination matrix (can be the original matrix)
+ * Transposes a matrix. If the destination matrix doesn't have dimensions equal
+ * to the transpose of the source matrix, the arguments are left unchanged.
+ * @param dst Destination matrix (can be the source matrix if it's a square matrix)
  * @param matrix Matrix to transpose
  */
 void matrix_transpose(Matrix* dst, Matrix* matrix);

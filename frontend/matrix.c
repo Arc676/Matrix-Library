@@ -96,7 +96,7 @@ int main(int argc, char* argv[]) {
 			matrix_destroyMatrix(m1);
 			matrix_destroyMatrix(m2);
 			matrix_destroyMatrix(mp);
-		} else if (!strcmp(cmd, "similar")) {
+		} else if (!strcmp(cmd, "conjugate")) {
 			printf("Enter U: ");
 			Matrix* U = inputMatrix();
 			printf("Enter A: ");
@@ -111,6 +111,13 @@ int main(int argc, char* argv[]) {
 			matrix_destroyMatrix(U);
 			matrix_destroyMatrix(A);
 			matrix_destroyMatrix(res);
+		} else if (!strcmp(cmd, "transpose")) {
+			Matrix* M = inputMatrix();
+			Matrix* MT = matrix_createMatrix(M->cols, M->rows);
+			matrix_transpose(MT, M);
+			printMatrix(MT);
+			matrix_destroyMatrix(M);
+			matrix_destroyMatrix(MT);
 		}
 		else if (!strcmp(cmd, "exit")) {
 			break;

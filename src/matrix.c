@@ -83,15 +83,23 @@ void matrix_destroyMatrix(Matrix* matrix) {
 }
 
 void matrix_transpose(Matrix* dst, Matrix* matrix) {
-	if (dst->rows != matrix->rows || dst->cols != matrix->cols) {
+	if (dst->cols != matrix->rows || dst->rows != matrix->cols) {
 		return;
 	}
-	for (int r = 0; r < matrix->rows; r++) {
-		dst->matrix[r][r] = matrix->matrix[r][r];
-		for (int c = r + 1; c < matrix->cols; c++) {
-			double toSwap = matrix->matrix[c][r];
-			dst->matrix[c][r] = matrix->matrix[r][c];
-			dst->matrix[r][c] = toSwap;
+	if (matrix->rows == matrix->cols) {
+		for (int r = 0; r < matrix->rows; r++) {
+			dst->matrix[r][r] = matrix->matrix[r][r];
+			for (int c = r + 1; c < matrix->cols; c++) {
+				double toSwap = matrix->matrix[c][r];
+				dst->matrix[c][r] = matrix->matrix[r][c];
+				dst->matrix[r][c] = toSwap;
+			}
+		}
+	} else {
+		for (int r = 0; r < matrix->rows; r++) {
+			for (int c = 0; c < matrix->cols; c++) {
+				dst->matrix[c][r] = matrix->matrix[r][c];
+			}
 		}
 	}
 }
