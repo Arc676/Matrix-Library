@@ -15,9 +15,13 @@ LIB=-l matrix
 ODIR=obj
 SDIR=src
 FDIR=frontend
+F2DIR=frontend2
 
 OBJS=matrix.o arithmetic.o inverse.o
 _OBJS=$(patsubst %, $(ODIR)/%, $(OBJS))
+
+matrix2: lib
+	$(CC) $(CFLAGS) $(F2DIR)/matrix.c $(LIB) -o $(F2DIR)/$(EXECOUT)
 
 matrix: lib
 	$(CC) $(CFLAGS) $(FDIR)/matrix.c $(LIB) -o $(FDIR)/$(EXECOUT)
