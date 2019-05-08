@@ -8,6 +8,10 @@ ifdef DEBUG
 FLAGS+=-g -O0
 endif
 
+ifdef THREADSAFE
+FLAGS+=-D THREADSAFE
+endif
+
 INCLUDE=-I src -L .
 CFLAGS=$(FLAGS) $(INCLUDE)
 LIB=-l matrix

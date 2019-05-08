@@ -12,6 +12,12 @@
 //You should have received a copy of the GNU General Public License
 //along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+#ifdef THREADSAFE
+#define PARSE_TOKEN(expr, delim, ptr) strtok_r(expr, delim, ptr)
+#else
+#define PARSE_TOKEN(expr, delim, ptr) strtok(expr, delim)
+#endif
+
 #define MATRIX_MEMORY_SIZE 50
 
 #include <stdio.h>
@@ -47,7 +53,7 @@ Matrix* eval(char* expr, Matrix** matrices, char** progress) {
 	if (progress) {
 		saveptr = *progress;
 	}
-	char* token = progress ? strtok_r(NULL, " ", &saveptr) : strtok_r(expr, " ", &saveptr);
+	char* token = progress ? PARSE_TOKEN(NULL, " ", &saveptr) : PARSE_TOKEN(expr, " ", &saveptr);
 	switch (token[0]) {
 		case '+':
 		case '-':
@@ -73,7 +79,7 @@ Matrix* eval(char* expr, Matrix** matrices, char** progress) {
 		case '^':
 		{
 			Matrix* m1 = eval(expr, matrices, &saveptr);
-			token = strtok_r(NULL, " ", &saveptr);
+			token = PARSE_TOKEN(NULL, " ", &saveptr);
 			int power = (int)strtol(token, (char**)NULL, 0);
 			if (power == 0) {
 				res = matrix_createIdentityMatrix(m1->rows);
