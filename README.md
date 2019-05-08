@@ -39,7 +39,11 @@ The following operators are available:
 | . | 1 matrix, then 1 real number | Multiplies the matrix by the scalar |
 | ^ | 1 square matrix, then 1 integer | Computes the matrix to the given power |
 | i | 1 square matrix | Computes the inverse of the matrix |
+| d | 1 matrix | Computes the determinant of the given matrix |
+| min | 1 matrix | Computes the matrix of minors of the given matrix |
+| c | 1 matrix | Computes the matrix of cofactors of the given matrix |
 | t | 1 matrix | Computes the transpose of the matrix |
+| id | 1 integer | Creates an identity matrix of the given size |
 
 To save a matrix in memory, use `= m(index) expression`. The result of the given expression will be stored in memory at the given index.
 

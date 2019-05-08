@@ -112,11 +112,46 @@ Matrix* eval(char* expr, Matrix** matrices, char** progress) {
 			matrix_destroyMatrix(m2);
 			break;
 		}
-		case 'i':
+		case 'm':
 		{
-			Matrix* m1 = eval(expr, matrices, &saveptr);
-			matrix_invert(m1, m1, NULL, NULL);
-			res = m1;
+			if (strcmp(token, "min")) {
+				int idx = (int)strtol(token + 1, (char**)NULL, 0);
+				res = matrix_copyMatrix(matrices[idx]);
+				break;
+			}
+		}
+		case 'i':
+		case 'd':
+		case 'c':
+		{
+			if (!strcmp(token, "id")) {
+				token = PARSE_TOKEN(NULL, &saveptr);
+				int size = (int)strtol(token, (char**)NULL, 0);
+				res = matrix_createIdentityMatrix(size);
+			} else {
+				Matrix* m1 = eval(expr, matrices, &saveptr);
+				Matrix* minors = matrix_createMatrix(m1->rows, m1->cols);
+				Matrix* cofactors = matrix_createMatrix(m1->rows, m1->cols);
+				double det = matrix_invert(m1, m1, minors, cofactors);
+				switch (token[0]) {
+					case 'd':
+						res = matrix_createMatrixWithElements(1, 1, det);
+						break;
+					case 'i':
+					default:
+						res = matrix_copyMatrix(m1);
+						break;
+					case 'c':
+						res = matrix_copyMatrix(cofactors);
+						break;
+					case 'm':
+						res = matrix_copyMatrix(minors);
+						break;
+				}
+				matrix_destroyMatrix(m1);
+				matrix_destroyMatrix(minors);
+				matrix_destroyMatrix(cofactors);
+			}
 			break;
 		}
 		case 't':
@@ -141,12 +176,6 @@ Matrix* eval(char* expr, Matrix** matrices, char** progress) {
 				matrix_destroyMatrix(matrices[idx]);
 			}
 			matrices[idx] = matrix_copyMatrix(res);
-			break;
-		}
-		case 'm':
-		{
-			int idx = (int)strtol(token + 1, (char**)NULL, 0);
-			res = matrix_copyMatrix(matrices[idx]);
 			break;
 		}
 		default:
