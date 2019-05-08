@@ -94,6 +94,21 @@ Matrix* eval(char* expr, Matrix** matrices, char** progress) {
 			matrix_destroyMatrix(m2);
 			break;
 		}
+		case 'i':
+		{
+			Matrix* m1 = eval(expr, matrices, &saveptr);
+			matrix_invert(m1, m1, NULL, NULL);
+			res = m1;
+			break;
+		}
+		case 't':
+		{
+			Matrix* m1 = eval(expr, matrices, &saveptr);
+			res = matrix_createMatrix(m1->cols, m1->rows);
+			matrix_transpose(res, m1);
+			matrix_destroyMatrix(m1);
+			break;
+		}
 		default:
 		{
 			int idx = (int)strtol(token + 1, (char**)NULL, 0);

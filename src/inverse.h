@@ -43,7 +43,7 @@ double matrix_determinant(Matrix* matrix, Matrix* cofactors);
 /**
  * Determine the inverse of a matrix
  * @param dst Destination matrix in which to store the inverse matrix (can be the operand)
- * @param matrix Matrix whose inverse to find. If the matrix isn't squared, the arguments are left unchanged and 0 is returned
+ * @param matrix Matrix whose inverse to find. If the matrix isn't a square matrix, the arguments are left unchanged and 0 is returned
  * @param minors Destination matrix in which to store the matrix of minors (optional)
  * @param cofactors Destination matrix in which to store the matrix of cofactors (optional)
  * @return The determinant of the matrix

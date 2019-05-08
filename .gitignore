@@ -2,3 +2,5 @@
 *.o
 *.a
 *.ignore
+frontend/matrix
+frontend2/matrix
