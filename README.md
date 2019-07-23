@@ -36,7 +36,7 @@ The following operators are available:
 | + | 2 matrices | Adds the two matrices together |
 | - | 2 matrices | Subtracts the second matrix from the first |
 | * | 2 matrices | Multiplies the two matrices in their given order |
-| . | 1 matrix, then 1 real number | Multiplies the matrix by the scalar |
+| . | 1 real number, then 1 matrix | Multiplies the matrix by the scalar |
 | ^ | 1 square matrix, then 1 integer | Computes the matrix to the given power |
 | i | 1 square matrix | Computes the inverse of the matrix |
 | d | 1 matrix | Computes the determinant of the given matrix |

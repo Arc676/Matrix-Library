@@ -47,7 +47,10 @@ Matrix* inputMatrix() {
 	return m;
 }
 
+int evalFailed = 0;
+
 Matrix* eval(char* expr, Matrix** matrices, char** progress) {
+	evalFailed = 0;
 	Matrix* res = 0;
 	char* saveptr;
 	#ifdef THREADSAFE
@@ -62,7 +65,14 @@ Matrix* eval(char* expr, Matrix** matrices, char** progress) {
 		case '*':
 		{
 			Matrix* left = eval(expr, matrices, &saveptr);
+			if (evalFailed) return NULL;
+
 			Matrix* right = eval(expr, matrices, &saveptr);
+			if (evalFailed) {
+				matrix_destroyMatrix(left);
+				return NULL;
+			}
+
 			if (token[0] == '-') {
 				matrix_multiplyScalar(right, right, -1);
 			}
@@ -80,9 +90,12 @@ Matrix* eval(char* expr, Matrix** matrices, char** progress) {
 		}
 		case '.':
 		{
-			Matrix* m1 = eval(expr, matrices, &saveptr);
 			token = PARSE_TOKEN(NULL, &saveptr);
-			double scalar = (double)strtol(token, (char**)NULL, 0);
+			double scalar = (double)strtod(token, (char**)NULL);
+
+			Matrix* m1 = eval(expr, matrices, &saveptr);
+			if (evalFailed) return NULL;
+
 			res = matrix_createMatrix(m1->rows, m1->cols);
 			matrix_multiplyScalar(res, m1, scalar);
 			matrix_destroyMatrix(m1);
@@ -91,6 +104,8 @@ Matrix* eval(char* expr, Matrix** matrices, char** progress) {
 		case '^':
 		{
 			Matrix* m1 = eval(expr, matrices, &saveptr);
+			if (evalFailed) return NULL;
+
 			token = PARSE_TOKEN(NULL, &saveptr);
 			int power = (int)strtol(token, (char**)NULL, 0);
 			if (power == 0) {
@@ -114,8 +129,14 @@ Matrix* eval(char* expr, Matrix** matrices, char** progress) {
 		}
 		case 'm':
 		{
+			// if NOT computing the minors, instead copy the matrix with the given index
 			if (strcmp(token, "min")) {
 				int idx = (int)strtol(token + 1, (char**)NULL, 0);
+				if (!matrices[idx]) {
+					evalFailed = 1;
+					printf("No matrix saved at index %d\n", idx);
+					return NULL;
+				}
 				res = matrix_copyMatrix(matrices[idx]);
 				break;
 			}
@@ -130,6 +151,8 @@ Matrix* eval(char* expr, Matrix** matrices, char** progress) {
 				res = matrix_createIdentityMatrix(size);
 			} else {
 				Matrix* m1 = eval(expr, matrices, &saveptr);
+				if (evalFailed) return NULL;
+
 				Matrix* minors = matrix_createMatrix(m1->rows, m1->cols);
 				Matrix* cofactors = matrix_createMatrix(m1->rows, m1->cols);
 				double det = matrix_invert(m1, m1, minors, cofactors);
@@ -157,6 +180,8 @@ Matrix* eval(char* expr, Matrix** matrices, char** progress) {
 		case 't':
 		{
 			Matrix* m1 = eval(expr, matrices, &saveptr);
+			if (evalFailed) return NULL;
+
 			res = matrix_createMatrix(m1->cols, m1->rows);
 			matrix_transpose(res, m1);
 			matrix_destroyMatrix(m1);
@@ -172,6 +197,8 @@ Matrix* eval(char* expr, Matrix** matrices, char** progress) {
 			token = PARSE_TOKEN(NULL, &saveptr);
 			int idx = (int)strtol(token + 1, (char**)NULL, 0);
 			res = eval(expr, matrices, &saveptr);
+			if (evalFailed) return NULL;
+
 			if (matrices[idx]) {
 				matrix_destroyMatrix(matrices[idx]);
 			}
@@ -179,7 +206,8 @@ Matrix* eval(char* expr, Matrix** matrices, char** progress) {
 			break;
 		}
 		default:
-			printf("Failed to interpret token '%s'\n", token);
+			printf("Failed to interpret token %s", token);
+			evalFailed = 1;
 			break;
 	}
 	#ifdef THREADSAFE
@@ -201,6 +229,27 @@ int main(int argc, char* argv[]) {
 		if (!strncmp(input, "exit", 4)) {
 			printf("Exiting...\n");
 			break;
+		} else if (!strncmp(input, "help", 4)) {
+			printf("Commands: exit, help\nEBNF:\n\
+expression = operator argument [argument]\n\
+argument = expression | matrix\n\
+matrix = 'm'index | '?'\n\
+index = (a number between 0 and 49, inclusive)\n\n\
+Available operators:\n\
+| Operator | Arguments | Description |\n\
+| --- | --- | --- |\n\
+| + | 2 matrices | Adds the two matrices together |\n\
+| - | 2 matrices | Subtracts the second matrix from the first |\n\
+| * | 2 matrices | Multiplies the two matrices in their given order |\n\
+| . | 1 real number, then 1 matrix | Multiplies the matrix by the scalar |\n\
+| ^ | 1 square matrix, then 1 integer | Computes the matrix to the given power |\n\
+| i | 1 square matrix | Computes the inverse of the matrix |\n\
+| d | 1 matrix | Computes the determinant of the given matrix |\n\
+| min | 1 matrix | Computes the matrix of minors of the given matrix |\n\
+| c | 1 matrix | Computes the matrix of cofactors of the given matrix |\n\
+| t | 1 matrix | Computes the transpose of the matrix |\n\
+| id | 1 integer | Creates an identity matrix of the given size |\n");
+			continue;
 		}
 		Matrix* matrix = eval(input, memory, NULL);
 		if (matrix) {
