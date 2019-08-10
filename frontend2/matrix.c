@@ -22,7 +22,20 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 #include "libmatrix.h"
+
+#include "memory.h"
+
+int isValidMatrixName(char* name) {
+	char c = name[0];
+	if (isalpha(c)) {
+		if (c != 'i' && c != 'm' && c != 't'&& c != 'd' && c != 'c') {
+			return 1;
+		}
+	}
+	return 0;
+}
 
 void printMatrix(Matrix* m) {
 	for (int r = 0; r < m->rows; r++) {
@@ -49,7 +62,7 @@ Matrix* inputMatrix() {
 
 int evalFailed = 0;
 
-Matrix* eval(char* expr, Matrix** matrices, char** progress) {
+Matrix* eval(char* expr, char** progress) {
 	evalFailed = 0;
 	Matrix* res = 0;
 	char* saveptr;
@@ -64,10 +77,10 @@ Matrix* eval(char* expr, Matrix** matrices, char** progress) {
 		case '-':
 		case '*':
 		{
-			Matrix* left = eval(expr, matrices, &saveptr);
+			Matrix* left = eval(expr, &saveptr);
 			if (evalFailed) return NULL;
 
-			Matrix* right = eval(expr, matrices, &saveptr);
+			Matrix* right = eval(expr, &saveptr);
 			if (evalFailed) {
 				matrix_destroyMatrix(left);
 				return NULL;
@@ -93,7 +106,7 @@ Matrix* eval(char* expr, Matrix** matrices, char** progress) {
 			token = PARSE_TOKEN(NULL, &saveptr);
 			double scalar = (double)strtod(token, (char**)NULL);
 
-			Matrix* m1 = eval(expr, matrices, &saveptr);
+			Matrix* m1 = eval(expr, &saveptr);
 			if (evalFailed) return NULL;
 
 			res = matrix_createMatrix(m1->rows, m1->cols);
@@ -103,7 +116,7 @@ Matrix* eval(char* expr, Matrix** matrices, char** progress) {
 		}
 		case '^':
 		{
-			Matrix* m1 = eval(expr, matrices, &saveptr);
+			Matrix* m1 = eval(expr, &saveptr);
 			if (evalFailed) return NULL;
 
 			token = PARSE_TOKEN(NULL, &saveptr);
@@ -128,19 +141,6 @@ Matrix* eval(char* expr, Matrix** matrices, char** progress) {
 			break;
 		}
 		case 'm':
-		{
-			// if NOT computing the minors, instead copy the matrix with the given index
-			if (strcmp(token, "min")) {
-				int idx = (int)strtol(token + 1, (char**)NULL, 0);
-				if (!matrices[idx]) {
-					evalFailed = 1;
-					printf("No matrix saved at index %d\n", idx);
-					return NULL;
-				}
-				res = matrix_copyMatrix(matrices[idx]);
-				break;
-			}
-		}
 		case 'i':
 		case 'd':
 		case 'c':
@@ -150,7 +150,7 @@ Matrix* eval(char* expr, Matrix** matrices, char** progress) {
 				int size = (int)strtol(token, (char**)NULL, 0);
 				res = matrix_createIdentityMatrix(size);
 			} else {
-				Matrix* m1 = eval(expr, matrices, &saveptr);
+				Matrix* m1 = eval(expr, &saveptr);
 				if (evalFailed) return NULL;
 
 				Matrix* minors = matrix_createMatrix(m1->rows, m1->cols);
@@ -179,7 +179,7 @@ Matrix* eval(char* expr, Matrix** matrices, char** progress) {
 		}
 		case 't':
 		{
-			Matrix* m1 = eval(expr, matrices, &saveptr);
+			Matrix* m1 = eval(expr, &saveptr);
 			if (evalFailed) return NULL;
 
 			res = matrix_createMatrix(m1->cols, m1->rows);
@@ -195,19 +195,28 @@ Matrix* eval(char* expr, Matrix** matrices, char** progress) {
 		case '=':
 		{
 			token = PARSE_TOKEN(NULL, &saveptr);
-			int idx = (int)strtol(token + 1, (char**)NULL, 0);
-			res = eval(expr, matrices, &saveptr);
+			if (!isValidMatrixName(token)) {
+				evalFailed = 1;
+				printf("Cannot save matrix with name %s\n", token);
+				return NULL;
+			}
+			res = eval(expr, &saveptr);
 			if (evalFailed) return NULL;
 
-			if (matrices[idx]) {
-				matrix_destroyMatrix(matrices[idx]);
-			}
-			matrices[idx] = matrix_copyMatrix(res);
+			saveMatrixWithName(token, matrix_copyMatrix(res));
 			break;
 		}
 		default:
-			printf("Failed to interpret token %s", token);
-			evalFailed = 1;
+			if (token[strlen(token) - 1] == '\n') {
+				token[strlen(token) - 1] = '\0';
+			}
+			Matrix* stored = getMatrixWithName(token);
+			if (!stored) {
+				evalFailed = 1;
+				printf("Failed to interpret token %s", token);
+				return NULL;
+			}
+			res = matrix_copyMatrix(stored);
 			break;
 	}
 	#ifdef THREADSAFE
@@ -221,8 +230,8 @@ Matrix* eval(char* expr, Matrix** matrices, char** progress) {
 int main(int argc, char* argv[]) {
 	printf("Matrix Calculator\nAvailable under GPLv3. See LICENSE for more details.\n");
 	char input[200];
-	Matrix** memory = malloc(MATRIX_MEMORY_SIZE * sizeof(Matrix*));
-	memset(memory, 0, MATRIX_MEMORY_SIZE * sizeof(Matrix*));
+	memset(input, 0, sizeof(input));
+	initMemory();
 	while (1) {
 		printf("\n> ");
 		fgets(input, sizeof(input), stdin);
@@ -233,8 +242,7 @@ int main(int argc, char* argv[]) {
 			printf("Commands: exit, help\nEBNF:\n\
 expression = operator argument [argument]\n\
 argument = expression | matrix\n\
-matrix = 'm'index | '?'\n\
-index = (a number between 0 and 49, inclusive)\n\n\
+matrix = (name) | '?'\n\n\
 Available operators:\n\
 | Operator | Arguments | Description |\n\
 | --- | --- | --- |\n\
@@ -245,13 +253,13 @@ Available operators:\n\
 | ^ | 1 square matrix, then 1 integer | Computes the matrix to the given power |\n\
 | i | 1 square matrix | Computes the inverse of the matrix |\n\
 | d | 1 matrix | Computes the determinant of the given matrix |\n\
-| min | 1 matrix | Computes the matrix of minors of the given matrix |\n\
+| m | 1 matrix | Computes the matrix of minors of the given matrix |\n\
 | c | 1 matrix | Computes the matrix of cofactors of the given matrix |\n\
 | t | 1 matrix | Computes the transpose of the matrix |\n\
 | id | 1 integer | Creates an identity matrix of the given size |\n");
 			continue;
 		}
-		Matrix* matrix = eval(input, memory, NULL);
+		Matrix* matrix = eval(input, NULL);
 		if (matrix) {
 			printMatrix(matrix);
 			matrix_destroyMatrix(matrix);
@@ -260,11 +268,6 @@ Available operators:\n\
 		}
 		memset(input, 0, sizeof(input));
 	}
-	for (int i = 0; i < MATRIX_MEMORY_SIZE; i++) {
-		if (memory[i]) {
-			matrix_destroyMatrix(memory[i]);
-		}
-	}
-	free(memory);
+	clearMemory();
 	return 0;
 }

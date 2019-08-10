@@ -12,6 +12,10 @@
 //You should have received a copy of the GNU General Public License
 //along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifndef ARITHMETIC_H
 #define ARITHMETIC_H
 
@@ -43,4 +47,8 @@ void matrix_multiplyScalar(Matrix* dst, Matrix* matrix, double scale);
  */
 void matrix_multiplyMatrix(Matrix* dst, Matrix* m1, Matrix* m2);
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif

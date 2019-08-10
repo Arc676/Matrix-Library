@@ -12,6 +12,10 @@
 //You should have received a copy of the GNU General Public License
 //along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifndef INVERSE_H
 #define INVERSE_H
 
@@ -50,4 +54,8 @@ double matrix_determinant(Matrix* matrix, Matrix* cofactors);
  */
 double matrix_invert(Matrix* dst, Matrix* matrix, Matrix* minors, Matrix* cofactors);
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
