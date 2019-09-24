@@ -16,7 +16,9 @@ The initial frontend and the simpler of the two. Type `help` at the prompt to se
 
 ### `frontend2/` (C++)
 
-The more user-friendly and flexible of the two frontends, the second matrix calculator uses [Polish notation](https://en.wikipedia.org/wiki/Polish_notation) to read and evaluate expressions. Additionally, the user may store any number of matrices in memory under any name that doesn't start with a reserved operator. These are stored in a `std::map<std::string, Matrix*>`.
+The more user-friendly and flexible of the two frontends, the second matrix calculator recognizes both normal infix notation and [Polish notation](https://en.wikipedia.org/wiki/Polish_notation) to read and evaluate expressions. Additionally, the user may store any number of matrices in memory under any name that doesn't start with a reserved operator. These are stored in a `std::map<std::string, Matrix*>`.
+
+Type `mode` at the prompt to switch between infix and postfix mode.
 
 Expression tokens must be separated by *spaces*. Expressions must adhere to the following syntax:
 

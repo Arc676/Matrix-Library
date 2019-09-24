@@ -14,10 +14,10 @@ ifdef THREADSAFE
 FLAGS+=-D THREADSAFE
 endif
 
-INCLUDE=-I src
+INCLUDE=-I src -I ExprFix/src
 CFLAGS=$(FLAGS) $(INCLUDE) $(DEBUGFLAG)
 CPPFLAGS=-std=c++11 $(INCLUDE) $(DEBUGFLAG)
-LIB=-L . -l matrix
+LIB=-L . -l matrix -L ExprFix -l exprfix
 
 ODIR=obj
 SDIR=src

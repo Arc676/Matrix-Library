@@ -23,9 +23,52 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+
+#include "exprfix.h"
 #include "libmatrix.h"
 
 #include "memory.h"
+
+int isUn(char* str) {
+	char c = str[0];
+	return c == '~' || c == 'i' || c == 'd' || c == 'm' || c == 'c' || c == 't';
+}
+
+int isBin(char* str) {
+	char c = str[0];
+	return c == '+' || c == '-' || c == '*' || c == '.' || c == '^' || c == '=';
+}
+
+void getOpProps(char* str, int* prec, int* left) {
+	switch (str[0]) {
+		case '+':
+			*prec = 10;
+			*left = 1;
+			break;
+		case '-':
+			*prec = 10;
+			*left = 1;
+			break;
+		case '*':
+			*prec = 20;
+			*left = 1;
+			break;
+		case '^':
+			*prec = 30;
+			*left = 0;
+			break;
+		case '.':
+			*prec = 20;
+			*left = 1;
+			break;
+		case '=':
+			*prec = 40;
+			*left = 0;
+			break;
+	}
+	*prec = 0;
+	*left = 0;
+}
 
 int isValidMatrixName(char* name) {
 	char c = name[0];
@@ -228,6 +271,7 @@ Matrix* eval(char* expr, char** progress) {
 }
 
 int main(int argc, char* argv[]) {
+	int infixMode = 1;
 	printf("Matrix Calculator\nAvailable under GPLv3. See LICENSE for more details.\n");
 	char input[200];
 	memset(input, 0, sizeof(input));
@@ -235,10 +279,11 @@ int main(int argc, char* argv[]) {
 	while (1) {
 		printf("\n> ");
 		fgets(input, sizeof(input), stdin);
-		if (!strncmp(input, "exit", 4)) {
+		input[strlen(input) - 1] = 0;
+		if (!strcmp(input, "exit")) {
 			printf("Exiting...\n");
 			break;
-		} else if (!strncmp(input, "help", 4)) {
+		} else if (!strcmp(input, "help")) {
 			printf("Commands: exit, help\nEBNF:\n\
 expression = operator argument [argument]\n\
 argument = expression | matrix\n\
@@ -258,8 +303,17 @@ Available operators:\n\
 | t | 1 matrix | Computes the transpose of the matrix |\n\
 | id | 1 integer | Creates an identity matrix of the given size |\n");
 			continue;
+		} else if (!strcmp(input, "mode")) {
+			infixMode = !infixMode;
+			printf("Input mode: %s\n", infixMode ? "infix" : "postfix");
+			continue;
 		}
-		Matrix* matrix = eval(input, NULL);
+		char* postfix = infixMode ? infixToPrefix(input, isBin, isUn, getOpProps) : NULL;
+		if (postfix) printf("Converted: %s\n", postfix);
+		Matrix* matrix = eval(infixMode ? postfix : input, NULL);
+		if (postfix) {
+			free(postfix);
+		}
 		if (matrix) {
 			printMatrix(matrix);
 			matrix_destroyMatrix(matrix);
