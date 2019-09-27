@@ -28,7 +28,7 @@ OBJS=matrix.o arithmetic.o inverse.o
 _OBJS=$(patsubst %, $(ODIR)/%, $(OBJS))
 
 matrix2: lib
-	$(CPP) -c $(F2DIR)/matrix.c $(F2DIR)/memory.cpp $(CPPFLAGS)
+	$(CPP) -c $(F2DIR)/matrix.cpp $(F2DIR)/memory.cpp $(CPPFLAGS)
 	mv *.o $(F2DIR)
 	$(CPP) $(F2DIR)/matrix.o $(F2DIR)/memory.o $(LIB) -o $(F2DIR)/$(EXECOUT)
 
