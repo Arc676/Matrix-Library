@@ -44,7 +44,7 @@ Matrix* matrix_createMatrixWithElements(int rows, int cols, ...) {
 	int count = rows * cols;
 
 	va_list arglist;
-	va_start(arglist, count);
+	va_start(arglist, cols);
 
 	for (int i = 0; i < count; i++) {
 		matrix->matrix[r][c] = va_arg(arglist, double);

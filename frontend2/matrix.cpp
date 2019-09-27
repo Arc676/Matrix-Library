@@ -309,7 +309,6 @@ Available operators:\n\
 			continue;
 		}
 		char* postfix = infixMode ? infixToPrefix(input, isBin, isUn, getOpProps) : NULL;
-		if (postfix) printf("Converted: %s\n", postfix);
 		Matrix* matrix = eval(infixMode ? postfix : input, NULL);
 		if (postfix) {
 			free(postfix);
