@@ -1,4 +1,4 @@
-//Copyright (C) 2018-9 Arc676/Alessandro Vinciguerra <alesvinciguerra@gmail.com>
+//Copyright (C) 2018-20 Arc676/Alessandro Vinciguerra <alesvinciguerra@gmail.com>
 
 //This program is free software: you can redistribute it and/or modify
 //it under the terms of the GNU General Public License as published by
@@ -6,7 +6,7 @@
 
 //This program is distributed in the hope that it will be useful,
 //but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //GNU General Public License for more details.
 
 //You should have received a copy of the GNU General Public License
@@ -67,7 +67,7 @@ Matrix* matrix_createMatrixWithElements(int rows, int cols, ...);
  * @param matrix Matrix to copy
  * @return A newly constructed matrix with the same entries
  */
-Matrix* matrix_copyMatrix(Matrix* matrix);
+Matrix* matrix_copyMatrix(const Matrix* matrix);
 
 /**
  * Copies the entries of a matrix into another one; if they are of unequal sizes,
@@ -75,7 +75,7 @@ Matrix* matrix_copyMatrix(Matrix* matrix);
  * @param dst The destination matrix
  * @param src The source matrix
  */
-void matrix_copyEntries(Matrix* dst, Matrix* src);
+void matrix_copyEntries(Matrix* dst, const Matrix* src);
 
 /**
  * Deallocates the memory for a matrix
@@ -89,7 +89,7 @@ void matrix_destroyMatrix(Matrix* matrix);
  * @param dst Destination matrix (can be the source matrix if it's a square matrix)
  * @param matrix Matrix to transpose
  */
-void matrix_transpose(Matrix* dst, Matrix* matrix);
+void matrix_transpose(Matrix* dst, const Matrix* matrix);
 
 /**
  * Sets all the entries in a matrix to zero
@@ -102,7 +102,7 @@ void matrix_zeroMatrix(Matrix* matrix);
  * @param matrix Matrix to check
  * @return Whether the given matrix is a zero matrix
  */
-int matrix_isZero(Matrix* matrix);
+int matrix_isZero(const Matrix* matrix);
 
 /**
  * Sets the entries in a square matrix to make it an identity matrix. If the
@@ -116,7 +116,7 @@ void matrix_makeIdentity(Matrix* matrix);
  * @param matrix Matrix to check
  * @return Whether the matrix is an identity matrix
  */
-int matrix_isIdentity(Matrix* matrix);
+int matrix_isIdentity(const Matrix* matrix);
 
 /**
  * Determines whether two matrices are equal
@@ -125,7 +125,7 @@ int matrix_isIdentity(Matrix* matrix);
  * @param tolerance Maximum deviation between entries before they are considered unequal
  * @return Whether all the entries in the given matrices are equal
  */
-int matrix_areEqual(Matrix* m1, Matrix* m2, double tolerance);
+int matrix_areEqual(const Matrix* m1, const Matrix* m2, double tolerance);
 
 #endif
 

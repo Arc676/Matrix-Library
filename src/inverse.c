@@ -1,4 +1,4 @@
-//Copyright (C) 2018-9 Arc676/Alessandro Vinciguerra <alesvinciguerra@gmail.com>
+//Copyright (C) 2018-20 Arc676/Alessandro Vinciguerra <alesvinciguerra@gmail.com>
 
 //This program is free software: you can redistribute it and/or modify
 //it under the terms of the GNU General Public License as published by
@@ -6,7 +6,7 @@
 
 //This program is distributed in the hope that it will be useful,
 //but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //GNU General Public License for more details.
 
 //You should have received a copy of the GNU General Public License
@@ -14,7 +14,7 @@
 
 #include "inverse.h"
 
-void matrix_minors(Matrix* dst, Matrix* matrix) {
+void matrix_minors(Matrix* dst, const Matrix* matrix) {
 	// if destination matrix and input matrix are of unequal size, do nothing
 	if (dst->rows != matrix->rows || dst->cols != matrix->cols) {
 		return;
@@ -42,7 +42,7 @@ void matrix_minors(Matrix* dst, Matrix* matrix) {
 	}
 }
 
-void matrix_cofactors(Matrix* dst, Matrix* minors) {
+void matrix_cofactors(Matrix* dst, const Matrix* minors) {
 	// if matrix of minors and destination matrix are of unequal size, do nothing
 	if (dst->rows != minors->rows || dst->cols != minors->cols) {
 		return;
@@ -55,20 +55,22 @@ void matrix_cofactors(Matrix* dst, Matrix* minors) {
 	}
 }
 
-double matrix_determinant(Matrix* matrix, Matrix* cofactors) {
+double matrix_determinant(const Matrix* matrix, const Matrix* cofactors) {
 	// determinant of a 1x1 matrix is its only element
 	if (matrix->rows == 1 && matrix->cols == 1) {
 		return matrix->matrix[0][0];
 	}
 
-	Matrix* mcofactors = cofactors;
+	const Matrix* mcofactors = cofactors;
+	Matrix* mcf;
 	// determine cofactors if not given
 	if (!mcofactors) {
-		mcofactors = matrix_createMatrix(matrix->rows, matrix->cols);
+		mcf = matrix_createMatrix(matrix->rows, matrix->cols);
 		Matrix* minors = matrix_createMatrix(matrix->rows, matrix->cols);
 		matrix_minors(minors, matrix);
-		matrix_cofactors(mcofactors, minors);
+		matrix_cofactors(mcf, minors);
 		matrix_destroyMatrix(minors);
+		mcofactors = mcf;
 	} else {
 		// if cofactors matrix and input matrix are of unequal size, do nothing
 		if (matrix->rows != cofactors->rows || matrix->cols != cofactors->cols) {
@@ -81,12 +83,12 @@ double matrix_determinant(Matrix* matrix, Matrix* cofactors) {
 	}
 	// destroy temporary cofactors matrix if none was given
 	if (!cofactors) {
-		matrix_destroyMatrix(mcofactors);
+		matrix_destroyMatrix(mcf);
 	}
 	return det;
 }
 
-double matrix_invert(Matrix* dst, Matrix* matrix, Matrix* minors, Matrix* cofactors) {
+double matrix_invert(Matrix* dst, const Matrix* matrix, Matrix* minors, Matrix* cofactors) {
 	// only square matrices allowed
 	if (matrix->rows != matrix->cols) {
 		return 0;

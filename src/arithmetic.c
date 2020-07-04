@@ -1,4 +1,4 @@
-//Copyright (C) 2018-9 Arc676/Alessandro Vinciguerra <alesvinciguerra@gmail.com>
+//Copyright (C) 2018-20 Arc676/Alessandro Vinciguerra <alesvinciguerra@gmail.com>
 
 //This program is free software: you can redistribute it and/or modify
 //it under the terms of the GNU General Public License as published by
@@ -6,7 +6,7 @@
 
 //This program is distributed in the hope that it will be useful,
 //but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //GNU General Public License for more details.
 
 //You should have received a copy of the GNU General Public License
@@ -14,7 +14,7 @@
 
 #include "arithmetic.h"
 
-void matrix_add(Matrix* dst, Matrix* m1, Matrix* m2) {
+void matrix_add(Matrix* dst, const Matrix* m1, const Matrix* m2) {
 	if (m1->rows != m2->rows || m1->cols != m2->cols) {
 		return;
 	}
@@ -25,7 +25,7 @@ void matrix_add(Matrix* dst, Matrix* m1, Matrix* m2) {
 	}
 }
 
-void matrix_multiplyScalar(Matrix* dst, Matrix* matrix, double scale) {
+void matrix_multiplyScalar(Matrix* dst, const Matrix* matrix, double scale) {
 	for (int r = 0; r < matrix->rows; r++) {
 		for (int c = 0; c < matrix->cols; c++) {
 			dst->matrix[r][c] = matrix->matrix[r][c] * scale;
@@ -33,7 +33,7 @@ void matrix_multiplyScalar(Matrix* dst, Matrix* matrix, double scale) {
 	}
 }
 
-void matrix_multiplyMatrix(Matrix* dst, Matrix* m1, Matrix* m2) {
+void matrix_multiplyMatrix(Matrix* dst, const Matrix* m1, const Matrix* m2) {
 	// matrices cannot be multiplied
 	if (m1->cols != m2->rows) {
 		return;

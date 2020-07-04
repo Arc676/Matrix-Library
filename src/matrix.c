@@ -1,4 +1,4 @@
-//Copyright (C) 2018-9 Arc676/Alessandro Vinciguerra <alesvinciguerra@gmail.com>
+//Copyright (C) 2018-20 Arc676/Alessandro Vinciguerra <alesvinciguerra@gmail.com>
 
 //This program is free software: you can redistribute it and/or modify
 //it under the terms of the GNU General Public License as published by
@@ -6,7 +6,7 @@
 
 //This program is distributed in the hope that it will be useful,
 //but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //GNU General Public License for more details.
 
 //You should have received a copy of the GNU General Public License
@@ -59,13 +59,13 @@ Matrix* matrix_createMatrixWithElements(int rows, int cols, ...) {
 	return matrix;
 }
 
-Matrix* matrix_copyMatrix(Matrix* matrix) {
+Matrix* matrix_copyMatrix(const Matrix* matrix) {
 	Matrix* copy = matrix_createMatrix(matrix->rows, matrix->cols);
 	matrix_copyEntries(copy, matrix);
 	return copy;
 }
 
-void matrix_copyEntries(Matrix* dst, Matrix* src) {
+void matrix_copyEntries(Matrix* dst, const Matrix* src) {
 	if (dst->rows != src->rows || dst->cols != src->cols) {
 		return;
 	}
@@ -82,7 +82,7 @@ void matrix_destroyMatrix(Matrix* matrix) {
 	free(matrix);
 }
 
-void matrix_transpose(Matrix* dst, Matrix* matrix) {
+void matrix_transpose(Matrix* dst, const Matrix* matrix) {
 	if (dst->cols != matrix->rows || dst->rows != matrix->cols) {
 		return;
 	}
@@ -112,7 +112,7 @@ void matrix_zeroMatrix(Matrix* matrix) {
 	}
 }
 
-int matrix_isZero(Matrix* matrix) {
+int matrix_isZero(const Matrix* matrix) {
 	for (int r = 0; r < matrix->rows; r++) {
 		for (int c = 0; c < matrix->cols; c++) {
 			if (matrix->matrix[r][c] != 0) {
@@ -134,7 +134,7 @@ void matrix_makeIdentity(Matrix* matrix) {
 	}
 }
 
-int matrix_isIdentity(Matrix* matrix) {
+int matrix_isIdentity(const Matrix* matrix) {
 	if (matrix->rows != matrix->cols) {
 		return 0;
 	}
@@ -148,7 +148,7 @@ int matrix_isIdentity(Matrix* matrix) {
 	return 1;
 }
 
-int matrix_areEqual(Matrix* m1, Matrix* m2, double tolerance) {
+int matrix_areEqual(const Matrix* m1, const Matrix* m2, double tolerance) {
 	if (m1->rows != m2->rows || m1->cols != m2->cols) {
 		return 0;
 	}

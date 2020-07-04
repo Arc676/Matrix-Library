@@ -1,4 +1,4 @@
-//Copyright (C) 2018-9 Arc676/Alessandro Vinciguerra <alesvinciguerra@gmail.com>
+//Copyright (C) 2018-20 Arc676/Alessandro Vinciguerra <alesvinciguerra@gmail.com>
 
 //This program is free software: you can redistribute it and/or modify
 //it under the terms of the GNU General Public License as published by
@@ -6,7 +6,7 @@
 
 //This program is distributed in the hope that it will be useful,
 //but WITHOUT ANY WARRANTY; without even the implied warranty of
-//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 //GNU General Public License for more details.
 
 //You should have received a copy of the GNU General Public License
@@ -28,7 +28,7 @@ extern "C" {
  * @param m1 First matrix
  * @param m2 Second matrix
  */
-void matrix_add(Matrix* dst, Matrix* m1, Matrix* m2);
+void matrix_add(Matrix* dst, const Matrix* m1, const Matrix* m2);
 
 /**
  * Multiplies a matrix by a scalar quantity
@@ -36,7 +36,7 @@ void matrix_add(Matrix* dst, Matrix* m1, Matrix* m2);
  * @param matrix Matrix to multiply
  * @param scale Scalar value
  */
-void matrix_multiplyScalar(Matrix* dst, Matrix* matrix, double scale);
+void matrix_multiplyScalar(Matrix* dst, const Matrix* matrix, double scale);
 
 /**
  * Multiplies two matrices. If the matrices do not have compatible dimensions,
@@ -45,7 +45,7 @@ void matrix_multiplyScalar(Matrix* dst, Matrix* matrix, double scale);
  * @param m1 First matrix
  * @param m2 Second matrix
  */
-void matrix_multiplyMatrix(Matrix* dst, Matrix* m1, Matrix* m2);
+void matrix_multiplyMatrix(Matrix* dst, const Matrix* m1, const Matrix* m2);
 
 #endif
 

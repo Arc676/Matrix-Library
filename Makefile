@@ -10,6 +10,10 @@ ifdef DEBUG
 DEBUGFLAG+=-g -O0
 endif
 
+ifdef FPIC
+FLAGS+=-fPIC
+endif
+
 ifdef THREADSAFE
 FLAGS+=-D THREADSAFE
 endif
@@ -45,4 +49,4 @@ $(ODIR)/%.o: $(SDIR)/%.c
 	$(CC) -c $(FLAGS) -o $@ $<
 
 clean:
-	rm -f $(LIBOUT) $(EXECOUT) $(ODIR)/*.o $(F2DIR)/*.o
+	rm -f $(LIBOUT) */*.o $(F2DIR)/$(EXECOUT) $(FDIR)/$(EXECOUT)
