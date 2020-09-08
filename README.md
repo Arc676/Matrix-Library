@@ -41,8 +41,8 @@ The following operators are available:
 | ^ | 1 square matrix, then 1 integer | Computes the matrix to the given power |
 | i | 1 square matrix | Computes the inverse of the matrix |
 | d | 1 matrix | Computes the determinant of the given matrix |
-| m | 1 matrix | Computes the matrix of minors of the given matrix |
-| c | 1 matrix | Computes the matrix of cofactors of the given matrix |
+| m | 1 square matrix | Computes the matrix of minors of the given matrix |
+| c | 1 square matrix | Computes the matrix of cofactors of the given matrix |
 | t | 1 matrix | Computes the transpose of the matrix |
 | id | 1 integer | Creates an identity matrix of the given size |
 

@@ -278,7 +278,10 @@ int main(int argc, char* argv[]) {
 	initMemory();
 	while (1) {
 		printf("\n> ");
-		fgets(input, sizeof(input), stdin);
+		if (fgets(input, sizeof(input), stdin) == NULL) {
+			printf("Received Ctrl+D. Exiting...\n");
+			break;
+		}
 		input[strlen(input) - 1] = 0;
 		if (!strcmp(input, "exit")) {
 			printf("Exiting...\n");
