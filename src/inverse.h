@@ -25,19 +25,19 @@ extern "C" {
 /**
  * Determine the matrix of minors for a given matrix
  * @param dst Destination matrix in which to store the matrix of minors (cannot be the operand)
- * @param matrix Matrix whose matrix of minors to find
+ * @param matrix Matrix whose matrix of minors to find. If the matrix isn't a square matrix, the arguments are left unchanged.
  */
 void matrix_minors(Matrix* dst, const Matrix* matrix);
 
 /**
  * Determine the matrix of cofactors for a given matrix
  * @param dst Destination matrix in which to store the matrix of cofactors (can be the operand)
- * @param minors Matrix of minors for the given matrix
+ * @param minors Matrix of minors for the given matrix. If this isn't a square matrix, the arguments are left unchanged.
  */
 void matrix_cofactors(Matrix* dst, const Matrix* minors);
 
 /**
- * Determine the determinant of a matrix
+ * Determine the determinant of a matrix. The determinant of a nonsquare matrix is always zero.
  * @param matrix Matrix whose determinant to find
  * @param cofactors Matrix of cofactors for the given matrix. If NULL, this will be calculated.
  * @return Determinant of the matrix

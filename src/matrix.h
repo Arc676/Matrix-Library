@@ -127,6 +127,13 @@ int matrix_isIdentity(const Matrix* matrix);
  */
 int matrix_areEqual(const Matrix* m1, const Matrix* m2, double tolerance);
 
+/**
+ * Determines whether a matrix is a square matrix
+ * @param m Matrix to check
+ * @return Whether the matrix has the same number of rows and columns
+ */
+int matrix_isSquare(const Matrix* m);
+
 #endif
 
 #ifdef __cplusplus

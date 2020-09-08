@@ -161,3 +161,7 @@ int matrix_areEqual(const Matrix* m1, const Matrix* m2, double tolerance) {
 	}
 	return 1;
 }
+
+int matrix_isSquare(const Matrix* m) {
+	return m->rows == m->cols;
+}

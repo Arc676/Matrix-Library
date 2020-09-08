@@ -19,6 +19,10 @@ void matrix_minors(Matrix* dst, const Matrix* matrix) {
 	if (dst->rows != matrix->rows || dst->cols != matrix->cols) {
 		return;
 	}
+	// if the matrix isn't square, do nothing
+	if (!matrix_isSquare(matrix)) {
+		return;
+	}
 
 	for (int r = 0; r < matrix->rows; r++) {
 		for (int c = 0; c < matrix->cols; c++) {
@@ -47,6 +51,10 @@ void matrix_cofactors(Matrix* dst, const Matrix* minors) {
 	if (dst->rows != minors->rows || dst->cols != minors->cols) {
 		return;
 	}
+	// if the matrix of minors isn't square, do nothing
+	if (!matrix_isSquare(minors)) {
+		return;
+	}
 
 	for (int r = 0; r < minors->rows; r++) {
 		for (int c = 0; c < minors->cols; c++) {
@@ -60,9 +68,13 @@ double matrix_determinant(const Matrix* matrix, const Matrix* cofactors) {
 	if (matrix->rows == 1 && matrix->cols == 1) {
 		return matrix->matrix[0][0];
 	}
+	// if the matrix isn't square, the determinant is zero
+	if (!matrix_isSquare(matrix)) {
+		return 0;
+	}
 
 	const Matrix* mcofactors = cofactors;
-	Matrix* mcf;
+	Matrix* mcf = NULL;
 	// determine cofactors if not given
 	if (!mcofactors) {
 		mcf = matrix_createMatrix(matrix->rows, matrix->cols);
@@ -82,7 +94,7 @@ double matrix_determinant(const Matrix* matrix, const Matrix* cofactors) {
 		det += matrix->matrix[0][c] * mcofactors->matrix[0][c];
 	}
 	// destroy temporary cofactors matrix if none was given
-	if (!cofactors) {
+	if (mcf) {
 		matrix_destroyMatrix(mcf);
 	}
 	return det;
