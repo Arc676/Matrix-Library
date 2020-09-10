@@ -63,6 +63,24 @@ Matrix* matrix_createIdentityMatrix(int size);
 Matrix* matrix_createMatrixWithElements(int rows, int cols, ...);
 
 /**
+ * Creates a new matrix with the entries in a given 1D array
+ * @param rows Desired number of rows in the matrix
+ * @param cols Desired number of columns in the matrix
+ * @param elements A list of rows*cols elements
+ * @return A newly constructed matrix with the given size and elements
+ */
+Matrix* matrix_createMatrixWithElementsFrom1D(int rows, int cols, double* elements);
+
+/**
+ * Creates a new matrix with the entries in a given 2D array
+ * @param rows Desired number of rows in the matrix
+ * @param cols Desired number of columns in the matrix
+ * @param elements An array containing 'row' arrays each containing 'col' elements
+ * @return A newly constructed matrix with the given size and elements
+ */
+Matrix* matrix_createMatrixWithElementsFrom2D(int rows, int cols, double** elements);
+
+/**
  * Copies a matrix
  * @param matrix Matrix to copy
  * @return A newly constructed matrix with the same entries

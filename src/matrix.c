@@ -59,6 +59,22 @@ Matrix* matrix_createMatrixWithElements(int rows, int cols, ...) {
 	return matrix;
 }
 
+Matrix* matrix_createMatrixWithElementsFrom1D(int rows, int cols, double* elements) {
+	Matrix* matrix = matrix_createMatrix(rows, cols);
+	for (int r = 0; r < rows; r++) {
+		memcpy(matrix->matrix[r], elements + r * cols, cols * sizeof(double));
+	}
+	return matrix;
+}
+
+Matrix* matrix_createMatrixWithElementsFrom2D(int rows, int cols, double** elements) {
+	Matrix* matrix = matrix_createMatrix(rows, cols);
+	for (int r = 0; r < rows; r++) {
+		memcpy(matrix->matrix[r], elements[r], cols * sizeof(double));
+	}
+	return matrix;
+}
+
 Matrix* matrix_copyMatrix(const Matrix* matrix) {
 	Matrix* copy = matrix_createMatrix(matrix->rows, matrix->cols);
 	matrix_copyEntries(copy, matrix);
